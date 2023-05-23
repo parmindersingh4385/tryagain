@@ -84,9 +84,9 @@ function formattedImageUrl(url){
     }else{
         return '';
     }
-} 
+}  
 
-app.listen(port, function(req, res){
-    console.log('Server listening on port 3000');
+app.listen(port, '0.0.0.0', function () {
+	console.log('App running on port ' + port);
 });
  
