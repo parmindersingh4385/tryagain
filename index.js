@@ -4,6 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const nodemon = require("nodemon");
 const express =  require('express');
+const mongoose = require('mongoose');
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -16,6 +17,31 @@ app.get('/', function(req, res){
         message: 'Welcome to render'
     });
 });
+
+//products model
+const PRODUCTS = mongoose.model('tbl_products', {
+    title: String,
+    product_id: String,
+    description: String, 
+    created_date: String,
+    image_url: Object,
+    brand_url: String,
+    purchase_url: String,
+    price: String,
+    is_active: Boolean
+}); 
+
+mongoose
+	.connect(
+		'mongodb+srv://parminder:9988641591%40ptk@cluster0-ix992.mongodb.net/db_products?retryWrites=true&w=majority',
+		{
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		}
+	)
+	.then(() => {
+		console.log('CONNECT.........................');		 
+	});
 
 app.get('/:id', async function(req, res){
     var productId = req.params.id;
@@ -34,6 +60,8 @@ app.get('/:id', async function(req, res){
         dataObj.price = $('.a-price-whole').text().split('.')[0];
         dataObj.brand = $('#bylineInfo').text().replace(/(^\w|\s\w)/g, m => m.toUpperCase());
         dataObj.brand_url = 'https://www.amazon.in' + $('#bylineInfo').attr('href');
+        
+        dataObj.purchase_url = `${url}?tag=girlsfab-21&language=en_IN`;
       
         dataObj.availability_status = $('#availability').children('span').text().trim();
 
@@ -61,7 +89,23 @@ app.get('/:id', async function(req, res){
                     dataObj.images.push(newUrl);
                 }
             } 
-        });
+        }); 
+
+        var newProduct = new PRODUCTS({
+            'title': dataObj.title,
+            'product_id': productId,
+            'description': dataObj.small_description[0],
+            'created_date': new Date().toISOString(), 
+            'image_url': dataObj.images,
+            'brand_url': dataObj.brand_url,            
+            'purchase_url': dataObj.purchase_url,
+            'price': dataObj.price, 
+            'is_active': (dataObj.availability_status == 'In stock') ? true : false
+        }); 
+
+        newProduct.save().then(function(data){  
+            console.log('Product saved successfully===============================================');                        
+        }); 
 
         res.send({
             data: dataObj
@@ -73,6 +117,15 @@ app.get('/:id', async function(req, res){
             message: 'Something went wrong..................'
         });
     } 
+});
+
+app.get('/products/all', async function(req, res){
+    try{
+        const productsData = await PRODUCTS.find({});
+        res.send(productsData);
+    } catch(err){
+        res.status(500).send(err);
+    }
 });
 
 function formattedImageUrl(url){
