@@ -43,7 +43,7 @@ mongoose
         console.log('CONNECT.........................');
     });
 
-app.get('/:id', async function (req, res) {
+app.get('add/:id', async function (req, res) {
     var productId = req.params.id;
     var dataObj = {};
     const url = `https://www.amazon.in/dp/${productId}`;
@@ -129,6 +129,13 @@ app.get('/:id', async function (req, res) {
             message: 'Something went wrong..................'
         });
     }
+});
+
+app.delete('delete/:id', async function (req, res) {
+    res.send({
+        success: true,
+        message: 'Product deleted successfully'
+    });
 });
 
 app.get('/products/all', async function (req, res) {
