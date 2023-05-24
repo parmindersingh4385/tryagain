@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Welcome to render at 6:32 pm'
+        message: 'Welcome to render at 6:37 pm'
     });
 });
 
@@ -43,7 +43,7 @@ mongoose
         console.log('CONNECT.........................');
     });
 
-app.get('add/:id', async function (req, res) {
+app.get('/add/:id', async function (req, res) {
     var productId = req.params.id;
     var dataObj = {};
     const url = `https://www.amazon.in/dp/${productId}`;
@@ -131,7 +131,7 @@ app.get('add/:id', async function (req, res) {
     }
 });
 
-app.get('delete/:id', function (req, res) {
+app.get('/delete/:id', function (req, res) {
     res.send({
         success: true,
         message: 'Product deleted successfully'
