@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Welcome to render at 6:41 pm'
+        message: 'Welcome to render at 7 pm'
     });
 });
 
@@ -39,6 +39,7 @@ mongoose
             useUnifiedTopology: true
         }
     )
+
     .then(() => {
         console.log('CONNECT.........................');
     });
@@ -131,20 +132,19 @@ app.get('/add/:id', async function (req, res) {
     }
 });
 
-app.get('/delete/:id', function (req, res) {
-    PRODUCTS.findByIdAndRemove({ _id: req.params.id }, function (err, docs) {
-        if (err) {
-            res.send({
-                success: false,
-                message: 'Something went wrong'
-            });
-        } else {
-            res.send({
-                success: true,
-                message: 'Product deleted successfully'
-            });
-        }
-    });
+app.get('/delete/:id', async function (req, res) {
+    const result = await PRODUCTS.findOneAndDelete(req.params.id);
+    if (!result) {
+        res.send({
+            success: false,
+            message: 'Product not found'
+        });
+    } else {
+        res.send({
+            success: true,
+            message: 'Product deleted successfully'
+        });
+    }
 });
 
 app.get('/products/all', async function (req, res) {
