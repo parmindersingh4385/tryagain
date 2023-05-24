@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Welcome to render at 6:27 pm'
+        message: 'Welcome to render at 6:30 pm'
     });
 });
 
@@ -131,7 +131,7 @@ app.get('add/:id', async function (req, res) {
     }
 });
 
-app.delete('delete/:id', async function (req, res) {
+app.get('delete/:id', async function (req, res) {
     res.send({
         success: true,
         message: 'Product deleted successfully'
