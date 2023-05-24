@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Welcome to render at 7 pm'
+        message: 'Welcome to render at NEW'
     });
 });
 
@@ -150,7 +150,10 @@ app.get('/delete/:id', async function (req, res) {
 app.get('/products/all', async function (req, res) {
     try {
         const productsData = await PRODUCTS.find({});
-        res.send(productsData);
+        res.send({
+            total: productsData.length,
+            data: productsData
+        });
     } catch (err) {
         res.status(500).send(err);
     }
