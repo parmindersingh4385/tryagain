@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Welcome to render at 6:37 pm'
+        message: 'Welcome to render at 6:41 pm'
     });
 });
 
@@ -132,9 +132,18 @@ app.get('/add/:id', async function (req, res) {
 });
 
 app.get('/delete/:id', function (req, res) {
-    res.send({
-        success: true,
-        message: 'Product deleted successfully'
+    PRODUCTS.findByIdAndRemove({ _id: req.params.id }, function (err, docs) {
+        if (err) {
+            res.send({
+                success: false,
+                message: 'Something went wrong'
+            });
+        } else {
+            res.send({
+                success: true,
+                message: 'Product deleted successfully'
+            });
+        }
     });
 });
 
