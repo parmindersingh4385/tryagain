@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................3:15 PM'
+        message: 'Cors added successfully..................3:30 PM'
     });
 });
 
@@ -178,7 +178,9 @@ app.patch('/:id', async function(req, res){
 });
 
 app.delete('/:id', async function (req, res) {
-    const result = await PRODUCTS.findOneAndDelete(req.params.id);
+    var productId = req.params.id;
+    const result = await PRODUCTS.findOneAndDelete({ product_id: productId });
+    console.log(result);
     if (!result) {
         res.json({
             success: false,
