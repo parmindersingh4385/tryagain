@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................1'
+        message: 'Cors added successfully..................11 AM'
     });
 });
 
