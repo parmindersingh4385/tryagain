@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................'
+        message: 'Cors added successfully..................1'
     });
 });
 
@@ -138,12 +138,12 @@ app.get('/add/:id', async function (req, res) {
 app.get('/delete/:id', async function (req, res) {
     const result = await PRODUCTS.findOneAndDelete(req.params.id);
     if (!result) {
-        res.send({
+        res.json({
             success: false,
             message: 'Product not found'
         });
     } else {
-        res.send({
+        res.json({
             success: true,
             message: 'Product deleted successfully'
         });
