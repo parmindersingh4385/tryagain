@@ -1,0 +1,17 @@
+GET http://localhost:3000/
+###
+GET http://localhost:3000/products/all
+###
+
+POST https://tryagain-7om2.onrender.com/girlsfab/B00MUTWLW4
+###
+POST http://localhost:3000/girlsfab/B00MUTWLW4
+###
+PATCH http://localhost:3000/B00MUTWLW4
+Content-Type: application/json
+
+{
+    "is_active": false
+}
+###
+DELETE http://localhost:3000/B00MUTWLW4

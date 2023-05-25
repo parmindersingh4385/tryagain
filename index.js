@@ -6,11 +6,14 @@ const nodemon = require('nodemon');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 
-app.use(cors());
-
 const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.json());
 
 // URL of the page we want to scrape
 //const url = "https://www.amazon.in/dp/B0BZ48H8JX";
@@ -31,6 +34,7 @@ const PRODUCTS = mongoose.model('tbl_products', {
     brand_url: String,
     purchase_url: String,
     price: String,
+    source: String,
     is_active: Boolean
 });
 
@@ -47,9 +51,10 @@ mongoose
         console.log('CONNECT.........................');
     });
 
-app.get('/add/:id', async function (req, res) {
-    var productId = req.params.id;
-    var dataObj = {};
+app.post('/:source/:id', async function (req, res) {
+    var productId = req.params.id,
+        source = req.params.source,
+        dataObj = {};
     const url = `https://www.amazon.in/dp/${productId}`;
 
     try {
@@ -123,6 +128,7 @@ app.get('/add/:id', async function (req, res) {
                 brand_url: dataObj.brand_url,
                 purchase_url: dataObj.purchase_url,
                 price: dataObj.price,
+                source: source,
                 is_active: dataObj.availability_status == 'In stock' ? true : false
             });
             
@@ -140,7 +146,31 @@ app.get('/add/:id', async function (req, res) {
     }
 });
 
-app.get('/delete/:id', async function (req, res) {
+app.patch('/:id', async function(req, res){
+    var productId = req.params.id;
+    console.log(productId);
+    console.log(req.body);
+    try {
+        const updatedProduct = await PRODUCTS.findOneAndUpdate({ product_id: productId }, req.body, {
+            new: true
+        }); 
+        console.log('11111');
+        console.log(updatedProduct);
+
+        if(updatedProduct){
+            res.json({ success: true, data: updatedProduct});
+        }else{
+            res.json({ success: false, message: 'No product found' });
+        }
+    } catch (err) {
+        res.json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+app.delete('/:id', async function (req, res) {
     const result = await PRODUCTS.findOneAndDelete(req.params.id);
     if (!result) {
         res.json({
