@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................3:30 PM'
+        message: 'Cors added successfully.................4:00 PM'
     });
 });
 
@@ -141,6 +141,7 @@ app.post('/:source/:id', async function (req, res) {
             }else{
                 var retData = await newProduct.save(); 
                 res.json({
+                    success: true,
                     data: retData
                 });
             }
