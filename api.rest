@@ -3,7 +3,7 @@ GET http://localhost:3000/
 GET http://localhost:3000/products/all
 ###
 
-POST https://tryagain-7om2.onrender.com/girlsfab/B00MUTWLW4
+POST https://tryagain-7om2.onrender.com/girlsfab/B0BLNR4TBT
 ###
 POST http://localhost:3000/girlsfab/B00MUTWLW4
 ###

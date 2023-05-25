@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................3:12 PM'
+        message: 'Cors added successfully..................3:15 PM'
     });
 });
 
@@ -132,11 +132,18 @@ app.post('/:source/:id', async function (req, res) {
                 is_active: dataObj.availability_status == 'In stock' ? true : false
             });
             
-            var retData = await newProduct.save(); 
-
-            res.json({
-                data: retData
-            });
+            const result = await PRODUCTS.find({ product_id: productId });
+            if(result.length > 0){
+                res.json({
+                    success: true,
+                    message: 'Product already exists'
+                });
+            }else{
+                var retData = await newProduct.save(); 
+                res.json({
+                    data: retData
+                });
+            }
         }
     } catch (err) {
         res.json({
