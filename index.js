@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 const nodemon = require('nodemon');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const app = express();
 
 app.use(cors());
@@ -16,7 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully'
+        message: 'Cors added successfully..................'
     });
 });
 
