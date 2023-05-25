@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................11 AM'
+        message: 'Cors added successfully..................12 PM'
     });
 });
 
@@ -53,82 +53,87 @@ app.get('/add/:id', async function (req, res) {
     const url = `https://www.amazon.in/dp/${productId}`;
 
     try {
-        // Fetch HTML of the page we want to scrape
-        const { data } = await axios.get(url);
-        // Load HTML we fetched in the previous line
-        const $ = cheerio.load(data, {
-            decodeEntities: true
-        });
 
-        dataObj.title = $('#productTitle').text().trim();
-        dataObj.price = $('.a-price-whole').text().split('.')[0];
-        dataObj.brand = $('#bylineInfo')
-            .text()
-            .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
-        dataObj.brand_url =
-            'https://www.amazon.in' + $('#bylineInfo').attr('href');
+        const result = await PRODUCTS.find({ product_id: productId });
+        if(result.length > 0){
+            res.json({
+                success: true,
+                message: 'Product already exists'
+            });
+        }else{
+            // Fetch HTML of the page we want to scrape
+            const { data } = await axios.get(url);
+            // Load HTML we fetched in the previous line
+            const $ = cheerio.load(data, {
+                decodeEntities: true
+            });
 
-        dataObj.purchase_url = `${url}?tag=girlsfab-21&language=en_IN`;
+            dataObj.title = $('#productTitle').text().trim();
+            dataObj.price = $('.a-price-whole').text().split('.')[0];
+            dataObj.brand = $('#bylineInfo')
+                .text()
+                .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+            dataObj.brand_url =
+                'https://www.amazon.in' + $('#bylineInfo').attr('href');
 
-        dataObj.availability_status = $('#availability')
-            .children('span')
-            .text()
-            .trim();
+            dataObj.purchase_url = `${url}?tag=girlsfab-21&language=en_IN`;
 
-        dataObj.small_description = [];
+            dataObj.availability_status = $('#availability')
+                .children('span')
+                .text()
+                .trim();
 
-        $('#feature-bullets>ul>li>span').each((i, el) => {
-            dataObj.small_description.push(
-                $(el)
-                    .text()
-                    .replace(/[\n\t]/g, '')
-                    .trim()
-            );
-        });
+            dataObj.small_description = [];
 
-        dataObj.product_information = {};
-        const listInfoItems = $('#productOverview_feature_div table tr');
-        listInfoItems.each((idx, el) => {
-            var evenInfo = $(el).children('td:even').children('span').text();
-            var oddInfo = $(el).children('td:odd').children('span').text();
-            dataObj.product_information[evenInfo] = oddInfo;
-        });
+            $('#feature-bullets>ul>li>span').each((i, el) => {
+                dataObj.small_description.push(
+                    $(el)
+                        .text()
+                        .replace(/[\n\t]/g, '')
+                        .trim()
+                );
+            });
 
-        dataObj.images = [];
+            dataObj.product_information = {};
+            const listInfoItems = $('#productOverview_feature_div table tr');
+            listInfoItems.each((idx, el) => {
+                var evenInfo = $(el).children('td:even').children('span').text();
+                var oddInfo = $(el).children('td:odd').children('span').text();
+                dataObj.product_information[evenInfo] = oddInfo;
+            });
 
-        const list = $('#altImages>ul>li');
-        list.each((idx, el) => {
-            if ($(el).find('img').attr('src') != undefined) {
-                var newUrl = formattedImageUrl($(el).find('img').attr('src'));
-                if (newUrl != '') {
-                    dataObj.images.push(newUrl);
+            dataObj.images = [];
+
+            const list = $('#altImages>ul>li');
+            list.each((idx, el) => {
+                if ($(el).find('img').attr('src') != undefined) {
+                    var newUrl = formattedImageUrl($(el).find('img').attr('src'));
+                    if (newUrl != '') {
+                        dataObj.images.push(newUrl);
+                    }
                 }
-            }
-        });
+            }); 
 
-        var newProduct = new PRODUCTS({
-            title: dataObj.title,
-            product_id: productId,
-            description: dataObj.small_description[0],
-            created_date: new Date().toISOString(),
-            image_url: dataObj.images,
-            brand_url: dataObj.brand_url,
-            purchase_url: dataObj.purchase_url,
-            price: dataObj.price,
-            is_active: dataObj.availability_status == 'In stock' ? true : false
-        });
+            var newProduct = new PRODUCTS({
+                title: dataObj.title,
+                product_id: productId,
+                description: dataObj.small_description[0],
+                created_date: new Date().toISOString(),
+                image_url: dataObj.images,
+                brand_url: dataObj.brand_url,
+                purchase_url: dataObj.purchase_url,
+                price: dataObj.price,
+                is_active: dataObj.availability_status == 'In stock' ? true : false
+            });
+            
+            var retData = await newProduct.save(); 
 
-        newProduct.save().then(function (data) {
-            console.log(
-                'Product saved successfully==============================================='
-            );
-        });
-
-        res.send({
-            data: dataObj
-        });
+            res.json({
+                data: retData
+            });
+        }
     } catch (err) {
-        res.send({
+        res.json({
             error: err,
             message: 'Something went wrong..................'
         });
