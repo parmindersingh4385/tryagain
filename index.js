@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully..................12 PM'
+        message: 'Cors added successfully..................12:12 PM'
     });
 });
 
@@ -134,8 +134,8 @@ app.get('/add/:id', async function (req, res) {
         }
     } catch (err) {
         res.json({
-            error: err,
-            message: 'Something went wrong..................'
+            success: false,
+            message: err.message
         });
     }
 });
