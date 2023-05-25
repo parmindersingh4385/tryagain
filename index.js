@@ -7,6 +7,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
+app.use(cors());
+
 const port = process.env.PORT || 3000;
 
 // URL of the page we want to scrape
@@ -14,7 +16,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'App working fine'
+        message: 'Cors added successfully'
     });
 });
 
