@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.send({
-        message: 'Cors added successfully.................5:00 PM'
+        message: 'Cors added successfully.................4:16 PM'
     });
 });
 
