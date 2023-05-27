@@ -1,0 +1,38 @@
+GET http://localhost:3000/
+###
+GET http://localhost:3000/products/all
+###
+POST http://localhost:3000/girlsfab/B0BLNR4TBT
+###
+POST http://localhost:3000/girlsfab/B00MUTWLW4
+###
+POST https://tryagain-7om2.onrender.com/girlsfab/B0BLNR4TBT
+###
+POST https://tryagain-7om2.onrender.com/girlsfab/B00MUTWLW4
+
+
+###
+PATCH http://localhost:3000/B00MUTWLW4
+Content-Type: application/json
+
+{
+    "is_active": false
+}
+
+###
+PATCH http://localhost:3000/B0BLNR4TBT
+Content-Type: application/json
+
+{
+    "is_active": false
+}
+###
+DELETE http://localhost:3000/B00MUTWLW4
+###
+DELETE http://localhost:3000/B0BLNR4TBT
+
+###
+DELETE https://tryagain-7om2.onrender.com/B00MUTWLW4
+
+###
+DELETE https://tryagain-7om2.onrender.com/B0BLNR4TBT
