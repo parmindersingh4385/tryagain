@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................5:10 PM'
+		message: 'App working fine.................5:17 PM'
 	});
 });
 
@@ -127,6 +127,8 @@ app.post('/:source/:id', async function (req, res) {
 			const browser = await puppeteer.launch({
 				headless: false,
 				defaultViewport: null,
+				args: ['--no-sandbox', '--disable-setuid-sandbox'],
+				ignoreDefaultArgs: ['--disable-extensions']
 			});
 		
 			// Open a new page
