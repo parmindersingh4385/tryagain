@@ -2,6 +2,7 @@
 // because we shall not log html to the terminal
 const axios = require('axios');
 const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 const nodemon = require('nodemon');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................7 PM'
+		message: 'App working fine.................11 AM'
 	});
 });
 
@@ -65,7 +66,7 @@ app.post('/:source/:id', async function (req, res) {
 				message: 'Product already exists'
 			});
 		} else {
-			// Fetch HTML of the page we want to scrape
+			/* // Fetch HTML of the page we want to scrape
 			const { data } = await axios.get(url);
 			// Load HTML we fetched in the previous line
 			const $ = cheerio.load(data, {
@@ -121,7 +122,68 @@ app.post('/:source/:id', async function (req, res) {
 						dataObj.images.push(newUrl);
 					}
 				}
+			}); */
+
+			const browser = await puppeteer.launch({
+				headless: true,
+				defaultViewport: null,
 			});
+		
+			// Open a new page
+			const page = await browser.newPage();
+
+			await page.goto(url, {
+				waitUntil: "domcontentloaded",
+			}); 
+
+			const dataObj = await page.evaluate(() => {
+				let responseObj = {};
+				
+				responseObj.title = document.querySelector('#productTitle').innerText;
+				 
+				const descriptionArray = document.querySelector('#feature-bullets'),
+					liObj = descriptionArray.querySelector('ul').querySelectorAll('li'),
+					descArray = [];
+		
+				Array.from(liObj).map((quote) => {
+					descArray.push(quote.querySelector("span").innerText); 
+				});
+		
+				responseObj.small_description = descArray; 
+		
+				responseObj.image_url = []; 
+		
+				const list = document.querySelector('#altImages'),
+					imgList = list.querySelector('ul').querySelectorAll('li');
+				
+				const imagesData = [];
+				for (const child of imgList) {
+					var imgObj = child.querySelector('img');
+					if(imgObj && imgObj.hasAttribute('src')){
+						var srcUrl = imgObj.getAttribute('src');
+						var dataArray = srcUrl.split('.');
+						if (dataArray['4'] == 'jpg') {
+							dataArray['3'] = '_SX500_';
+							var formattedUrl = dataArray.join('.'); 
+							imagesData.push(formattedUrl);
+						}
+					}
+				}
+				responseObj.images = imagesData; 
+		
+				responseObj.brand_url = 'https://www.amazon.in' + document.querySelector('#bylineInfo').getAttribute('href');
+				//responseObj.purchase_url = url+'?tag=girlsfab-21&language=en_IN';
+				responseObj.purchase_url = '?tag=girlsfab-21&language=en_IN';
+				responseObj.price = document.querySelector('.a-price-whole').innerText.split('.')[0].replace(/[\n\t]/g, '').trim();
+				
+				let elem = document.querySelector('#availability'),
+					children = elem?.children; 
+				responseObj.availability_status = children[0].innerHTML ? children[0].innerHTML.replace(/[\n\t]/g, '').trim() : '';
+				
+				return responseObj;
+			});
+
+			await browser.close();
 
 			var newProduct = new PRODUCTS({
 				title: dataObj.title,
@@ -130,7 +192,7 @@ app.post('/:source/:id', async function (req, res) {
 				created_date: new Date().toISOString(),
 				image_url: dataObj.images,
 				brand_url: dataObj.brand_url,
-				purchase_url: dataObj.purchase_url,
+				purchase_url: url + dataObj.purchase_url,
 				price: dataObj.price,
 				source: source,
 				is_active:
