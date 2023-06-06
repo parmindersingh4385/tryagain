@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................5:05 PM'
+		message: 'App working fine.................5:10 PM'
 	});
 });
 
@@ -125,7 +125,7 @@ app.post('/:source/:id', async function (req, res) {
 			}); */
 
 			const browser = await puppeteer.launch({
-				headless: true,
+				headless: false,
 				defaultViewport: null,
 			});
 		
