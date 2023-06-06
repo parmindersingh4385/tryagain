@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................5:22 PM'
+		message: 'App working fine.................5:27 PM'
 	});
 });
 
@@ -131,8 +131,13 @@ app.post('/:source/:id', async function (req, res) {
 				ignoreDefaultArgs: ['--disable-extensions']
 			}); */
 
-			const browser = await puppeteer.launch({
+			/* const browser = await puppeteer.launch({
 				ignoreDefaultArgs: ['--disable-extensions'],
+			}); */
+
+			const browser = await puppeteer.launch({
+				headless:false,
+				args: ["--no-sandbox"]
 			});
 		
 			// Open a new page
