@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................5:17 PM'
+		message: 'App working fine.................5:22 PM'
 	});
 });
 
@@ -124,11 +124,15 @@ app.post('/:source/:id', async function (req, res) {
 				}
 			}); */
 
-			const browser = await puppeteer.launch({
+			/* const browser = await puppeteer.launch({
 				headless: false,
 				defaultViewport: null,
 				args: ['--no-sandbox', '--disable-setuid-sandbox'],
 				ignoreDefaultArgs: ['--disable-extensions']
+			}); */
+
+			const browser = await puppeteer.launch({
+				ignoreDefaultArgs: ['--disable-extensions'],
 			});
 		
 			// Open a new page
