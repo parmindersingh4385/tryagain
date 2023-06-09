@@ -52,6 +52,114 @@ mongoose
 		console.log('CONNECT.........................');
 	});
 
+app.get('/info', async function(req, res){
+	var productId = 'B07RC6SKCN',
+		source = 'girlsfab',
+		url = `https://www.amazon.in/dp/B07RC6SKCN`;
+
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		ignoreDefaultArgs: ['--disable-extensions']
+	});
+
+	// Open a new page
+	const page = await browser.newPage();
+
+	await page.goto(url, {
+		waitUntil: "domcontentloaded",
+	}); 
+
+	const dataObj = {};
+
+	//product title
+	const titleObj = await page.evaluate((selector) => {
+		let responseObj = {};
+		return document.querySelector(selector).innerText;
+	}, '#productTitle'); 
+
+	dataObj.title = titleObj;
+
+	//product description
+	const descriptionObj = await page.evaluate((selector) => {
+		const descriptionArray = document.querySelector(selector),
+			liObj = descriptionArray.querySelector('ul').querySelectorAll('li'),
+			descArray = [];
+
+		Array.from(liObj).map((quote) => {
+			descArray.push(quote.querySelector('span').innerText); 
+		});
+
+		return descArray; 
+	}, '#feature-bullets');
+	
+	dataObj.description = descriptionObj;
+
+	//product images
+	const imagesObj = await page.evaluate((selector) => {
+		const imagesData = [],
+			list = document.querySelector(selector) ? document.querySelector(selector) : document.querySelector('#thumbImages'),
+			imgList = list.querySelector('ul').querySelectorAll('li');			
+		
+		for (const child of imgList) {
+			var imgObj = child.querySelector('img');
+			if(imgObj && imgObj.hasAttribute('src')){
+				var srcUrl = imgObj.getAttribute('src');
+				var dataArray = srcUrl.split('.');
+				if (dataArray['4'] == 'jpg') {
+					dataArray['3'] = '_SX500_';
+					var formattedUrl = dataArray.join('.'); 
+					imagesData.push(formattedUrl);
+				}
+			}
+		}
+		return imagesData; 
+	}, '#altImages');
+
+	dataObj.images = imagesObj;
+
+	//product brand url
+	const brandUrlObj = await page.evaluate((selector) => {
+		return 'https://www.amazon.in' + document.querySelector(selector).getAttribute('href');
+	}, '#bylineInfo');
+
+	dataObj.brand_url = brandUrlObj;
+
+	//product price
+	const priceObj = await page.evaluate((selector) => {
+		return document.querySelector(selector).innerText.split('.')[0].replace(/[\n\t]/g, '').trim();
+	}, '.a-price-whole');
+
+	dataObj.price = priceObj;
+
+	//product availability status
+	const availabilityStatus = await page.evaluate((selector) => {
+		let elem = document.querySelector(selector),
+			children = elem?.children; 
+		return children[0].innerHTML ? children[0].innerHTML.replace(/[\n\t]/g, '').trim() : '';
+	}, '#availability');
+
+	dataObj.availability_status = availabilityStatus;
+
+	await browser.close();
+
+	var newProduct = new PRODUCTS({
+		title: dataObj.title,
+		product_id: productId,
+		description: dataObj.description[0],
+		created_date: new Date().toISOString(),
+		image_url: dataObj.images,
+		brand_url: dataObj.brand_url, 
+		purchase_url: url + '?tag=girlsfab-21&language=en_IN',
+		price: dataObj.price,
+		source: source,
+		is_active:
+			dataObj.availability_status == 'In stock' ? true : false
+	});
+
+	res.json(newProduct);
+});
+
 app.post('/:source/:id', async function (req, res) {
 	var productId = req.params.id,
 		source = req.params.source,
@@ -140,13 +248,13 @@ app.post('/:source/:id', async function (req, res) {
 				args: ["--no-sandbox"]
 			}); */
 
-			const browser = await puppeteer.launch({
+			/*const browser = await puppeteer.launch({
 				headless: true,
 				args: ['--no-sandbox', '--disable-setuid-sandbox'],
 				ignoreDefaultArgs: ['--disable-extensions']
 			});
 		
-			// Open a new page
+			 // Open a new page
 			const page = await browser.newPage();
 
 			await page.goto(url, {
@@ -210,6 +318,106 @@ app.post('/:source/:id', async function (req, res) {
 				image_url: dataObj.images,
 				brand_url: dataObj.brand_url,
 				purchase_url: url + dataObj.purchase_url,
+				price: dataObj.price,
+				source: source,
+				is_active:
+					dataObj.availability_status == 'In stock' ? true : false
+			}); */
+
+			const browser = await puppeteer.launch({
+				headless: true,
+				args: ['--no-sandbox', '--disable-setuid-sandbox'],
+				ignoreDefaultArgs: ['--disable-extensions']
+			});
+
+			// Open a new page
+			const page = await browser.newPage();
+
+			await page.goto(url, {
+				waitUntil: "domcontentloaded",
+			}); 
+			
+			const dataObj = {};
+
+			//product title
+			const titleObj = await page.evaluate((selector) => {
+				let responseObj = {};
+				return document.querySelector(selector).innerText;
+			}, '#productTitle'); 
+
+			dataObj.title = titleObj;
+
+			//product description
+			const descriptionObj = await page.evaluate((selector) => {
+				const descriptionArray = document.querySelector(selector),
+					liObj = descriptionArray.querySelector('ul').querySelectorAll('li'),
+					descArray = [];
+
+				Array.from(liObj).map((quote) => {
+					descArray.push(quote.querySelector('span').innerText); 
+				});
+
+				return descArray; 
+			}, '#feature-bullets');
+			
+			dataObj.description = descriptionObj;
+
+			//product images
+			const imagesObj = await page.evaluate((selector) => {
+				const imagesData = [],
+					list = document.querySelector(selector) ? document.querySelector(selector) : document.querySelector('#thumbImages'),
+					imgList = list.querySelector('ul').querySelectorAll('li');			
+				
+				for (const child of imgList) {
+					var imgObj = child.querySelector('img');
+					if(imgObj && imgObj.hasAttribute('src')){
+						var srcUrl = imgObj.getAttribute('src');
+						var dataArray = srcUrl.split('.');
+						if (dataArray['4'] == 'jpg') {
+							dataArray['3'] = '_SX500_';
+							var formattedUrl = dataArray.join('.'); 
+							imagesData.push(formattedUrl);
+						}
+					}
+				}
+				return imagesData; 
+			}, '#altImages');
+
+			dataObj.images = imagesObj;
+
+			//product brand url
+			const brandUrlObj = await page.evaluate((selector) => {
+				return 'https://www.amazon.in' + document.querySelector(selector).getAttribute('href');
+			}, '#bylineInfo');
+
+			dataObj.brand_url = brandUrlObj;
+
+			//product price
+			const priceObj = await page.evaluate((selector) => {
+				return document.querySelector(selector).innerText.split('.')[0].replace(/[\n\t]/g, '').trim();
+			}, '.a-price-whole');
+
+			dataObj.price = priceObj;
+
+			//product availability status
+			const availabilityStatus = await page.evaluate((selector) => {
+				let elem = document.querySelector(selector),
+					children = elem?.children; 
+				return children[0].innerHTML ? children[0].innerHTML.replace(/[\n\t]/g, '').trim() : '';
+			}, '#availability');
+
+			dataObj.availability_status = availabilityStatus;
+
+			await browser.close();
+
+			var newProduct = new PRODUCTS({
+				title: dataObj.title,
+				product_id: productId,
+				description: dataObj.description[0],
+				created_date: new Date().toISOString(),
+				image_url: dataObj.images,
+				brand_url: dataObj.brand_url, 
+				purchase_url: url + '?tag=girlsfab-21&language=en_IN',
 				price: dataObj.price,
 				source: source,
 				is_active:
