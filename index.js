@@ -1,5 +1,6 @@
 // Loading the dependencies. We don't need pretty
 // because we shall not log html to the terminal
+require('dotenv').config();
 const axios = require('axios');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
@@ -326,8 +327,9 @@ app.post('/:source/:id', async function (req, res) {
 
 			const browser = await puppeteer.launch({
 				headless: true,
-				args: ['--no-sandbox', '--disable-setuid-sandbox'],
-				ignoreDefaultArgs: ['--disable-extensions']
+				args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process', '--no-zygote'],
+				ignoreDefaultArgs: ['--disable-extensions'],
+				executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath()
 			});
 
 			// Open a new page
