@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................11 AM'
+		message: 'App working fine.................12 AM'
 	});
 });
 
@@ -218,7 +218,7 @@ app.post('/:source/:id', async function (req, res) {
 			}); */
 
 			const browser = await puppeteer.launch({
-				headless: true,
+				headless: 'new',
 				args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process', '--no-zygote'],
 				ignoreDefaultArgs: ['--disable-extensions'],
 				executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath()
