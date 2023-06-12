@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................6:15 PM'
+		message: 'App working fine................6:25 PM'
 	});
 });
 
@@ -236,12 +236,11 @@ app.post('/:source/:id', async function (req, res) {
 			//product title
 			//await page.waitForSelector('#productTitle');
 
-			const searchResultSelector = '#productTitle';
-  			await page.waitForSelector(searchResultSelector, {timeout: 120000});
+			const searchResultSelector = '#productTitle'; 
 
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
-				return document.querySelector('#productTitle').innerText;
+				return document.querySelector('body > #productTitle').innerText;
 
 				/* const element = await page.waitForSelector('#productTitle');
 				return element.innerText; */
