@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................12:55 PM'
+		message: 'App working fine.................1:05 PM'
 	});
 });
 
@@ -227,7 +227,7 @@ app.post('/:source/:id', async function (req, res) {
 			// Open a new page
 			const page = await browser.newPage();
 
-			await page.goto('https://pptr.dev/guides/debugging', {
+			await page.goto(url, {
 				waitUntil: "domcontentloaded",
 			}); 
 			
@@ -236,7 +236,7 @@ app.post('/:source/:id', async function (req, res) {
 			//product title
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
-				return document.querySelector('#debugging-methods-for-client-code').innerText;
+				return document.querySelector('#productTitle').innerText;
 
 				/* const element = await page.waitForSelector('#productTitle');
 				return element.innerText; */
