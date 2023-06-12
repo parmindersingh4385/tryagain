@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................1:05 PM'
+		message: 'App working fine.................2 PM'
 	});
 });
 
@@ -234,6 +234,7 @@ app.post('/:source/:id', async function (req, res) {
 			const dataObj = {};
 
 			//product title
+			await page.waitForSelector('#productTitle');
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
 				return document.querySelector('#productTitle').innerText;
