@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................6:45 PM'
+		message: 'App working fine.................11 AM'
 	});
 });
 
