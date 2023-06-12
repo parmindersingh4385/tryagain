@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine.................3 PM'
+		message: 'App working fine................6:15 PM'
 	});
 });
 
@@ -237,7 +237,7 @@ app.post('/:source/:id', async function (req, res) {
 			//await page.waitForSelector('#productTitle');
 
 			const searchResultSelector = '#productTitle';
-  			await page.waitForSelector(searchResultSelector);
+  			await page.waitForSelector(searchResultSelector, {timeout: 120000});
 
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
