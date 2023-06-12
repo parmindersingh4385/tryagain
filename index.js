@@ -242,7 +242,7 @@ app.post('/:source/:id', async function (req, res) {
 			dataObj.title = titleObj;
 
 			//product description
-			const descriptionObj = await page.evaluate((selector) => {
+			/* const descriptionObj = await page.evaluate((selector) => {
 				const descriptionArray = document.querySelector(selector),
 					liObj = descriptionArray.querySelector('ul').querySelectorAll('li'),
 					descArray = [];
@@ -300,11 +300,13 @@ app.post('/:source/:id', async function (req, res) {
 				return children[0].innerHTML ? children[0].innerHTML.replace(/[\n\t]/g, '').trim() : '';
 			}, '#availability');
 
-			dataObj.availability_status = availabilityStatus;
+			dataObj.availability_status = availabilityStatus; */
 
 			await browser.close();
 
-			var newProduct = new PRODUCTS({
+			res.json(dataObj);
+
+			/* var newProduct = new PRODUCTS({
 				title: dataObj.title,
 				product_id: productId,
 				description: dataObj.description[0],
@@ -330,7 +332,7 @@ app.post('/:source/:id', async function (req, res) {
 					success: true,
 					data: retData
 				});
-			}
+			} */
 		}
 	} catch (err) {
 		res.json({
