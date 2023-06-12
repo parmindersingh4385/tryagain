@@ -227,7 +227,7 @@ app.post('/:source/:id', async function (req, res) {
 			// Open a new page
 			const page = await browser.newPage();
 
-			await page.goto(url, {
+			await page.goto('https://pptr.dev/guides/debugging', {
 				waitUntil: "domcontentloaded",
 			}); 
 			
@@ -235,12 +235,8 @@ app.post('/:source/:id', async function (req, res) {
 
 			//product title
 			const titleObj = await page.evaluate((selector) => {
-				console.log('selector................');
-				console.log(selector);
-				console.log(document.querySelector(selector));
-
 				let responseObj = {};
-				return document.querySelector(selector).innerText;
+				return document.querySelector('#debugging-methods-for-client-code').innerText;
 
 				/* const element = await page.waitForSelector('#productTitle');
 				return element.innerText; */
