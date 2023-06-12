@@ -1,1 +1,1 @@
-POST https://tryagain-4988.onrender.com/girlsfab/B07V8N2526
+POST http://localhost:3000/girlsfab/B07V8N2526

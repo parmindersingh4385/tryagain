@@ -235,6 +235,10 @@ app.post('/:source/:id', async function (req, res) {
 
 			//product title
 			//await page.waitForSelector('#productTitle');
+
+			const searchResultSelector = '#productTitle';
+  			await page.waitForSelector(searchResultSelector);
+
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
 				return document.querySelector('#productTitle').innerText;
@@ -249,7 +253,7 @@ app.post('/:source/:id', async function (req, res) {
 			dataObj.title = titleObj;
 
 			//product description
-			/* const descriptionObj = await page.evaluate((selector) => {
+			const descriptionObj = await page.evaluate((selector) => {
 				const descriptionArray = document.querySelector(selector),
 					liObj = descriptionArray.querySelector('ul').querySelectorAll('li'),
 					descArray = [];
@@ -307,7 +311,7 @@ app.post('/:source/:id', async function (req, res) {
 				return children[0].innerHTML ? children[0].innerHTML.replace(/[\n\t]/g, '').trim() : '';
 			}, '#availability');
 
-			dataObj.availability_status = availabilityStatus; */
+			dataObj.availability_status = availabilityStatus;
 
 			await browser.close();
 
