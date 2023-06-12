@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................6:25 PM'
+		message: 'App working fine................6:40 PM'
 	});
 });
 
@@ -236,16 +236,17 @@ app.post('/:source/:id', async function (req, res) {
 			//product title
 			//await page.waitForSelector('#productTitle');
 
-			const searchResultSelector = '#productTitle'; 
+			//const searchResultSelector = '#productTitle'; 
+			const selector = "#productTitle";
 
 			const titleObj = await page.evaluate((selector) => {
 				let responseObj = {};
-				return document.querySelector('body > #productTitle').innerText;
+				return document.querySelector(selector).innerText;
 
 				/* const element = await page.waitForSelector('#productTitle');
 				return element.innerText; */
 
-			}, '#productTitle'); 
+			}, selector); 
 
 			
 
