@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................6:50 PM'
+		message: 'App working fine................12:35 PM'
 	});
 });
 
@@ -67,7 +67,7 @@ app.post('/:source/:id', async function (req, res) {
 				message: 'Product already exists'
 			});
 		} else {
-			/* // Fetch HTML of the page we want to scrape
+			// Fetch HTML of the page we want to scrape
 			const { data } = await axios.get(url);
 			// Load HTML we fetched in the previous line
 			const $ = cheerio.load(data, {
@@ -123,7 +123,7 @@ app.post('/:source/:id', async function (req, res) {
 						dataObj.images.push(newUrl);
 					}
 				}
-			}); */
+			});
 
 			/* const browser = await puppeteer.launch({
 				headless: false,
@@ -217,7 +217,7 @@ app.post('/:source/:id', async function (req, res) {
 					dataObj.availability_status == 'In stock' ? true : false
 			}); */
 
-			const browser = await puppeteer.launch({
+			/* const browser = await puppeteer.launch({
 				headless: true,
 				args: ['--no-sandbox'],
 				ignoreDefaultArgs: ['--disable-extensions'],
@@ -246,8 +246,8 @@ app.post('/:source/:id', async function (req, res) {
 				}, 5000);
 				
 
-				/* const element = await page.waitForSelector('#productTitle');
-				return element.innerText; */
+				// const element = await page.waitForSelector('#productTitle');
+				// return element.innerText;
 
 			}, selector); 
 
@@ -318,9 +318,9 @@ app.post('/:source/:id', async function (req, res) {
 
 			await browser.close();
 
-			res.json(dataObj);
+			res.json(dataObj); */
 
-			/* var newProduct = new PRODUCTS({
+			var newProduct = new PRODUCTS({
 				title: dataObj.title,
 				product_id: productId,
 				description: dataObj.description[0],
@@ -346,7 +346,7 @@ app.post('/:source/:id', async function (req, res) {
 					success: true,
 					data: retData
 				});
-			} */
+			}
 		}
 	} catch (err) {
 		res.json({
