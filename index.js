@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................5:31 PM'
+		message: 'App working fine................5:45 PM'
 	});
 });
 
@@ -67,23 +67,19 @@ app.post('/:source/:id', async function (req, res) {
 				message: 'Product already exists'
 			});
 		} else {
-			res.json({
-				success: true,
-				message: 'QQQQQQQQQQQQ'
-			});
 			// Fetch HTML of the page we want to scrape
-			/* const { data } = await axios.get(url);
+			const { data } = await axios.get(url);
 			// Load HTML we fetched in the previous line
 			const $ = cheerio.load(data, {
 				decodeEntities: true
 			});
 
-			var text = $('#productTitle').text();
+			var text = $('#productTitle').text().trim();
 
 			res.json({
 				success: true,
 				message: text
-			}); */
+			});
 
 			/* return false;
 
