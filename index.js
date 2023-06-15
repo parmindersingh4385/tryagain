@@ -67,8 +67,12 @@ app.post('/:source/:id', async function (req, res) {
 				message: 'Product already exists'
 			});
 		} else {
+			res.json({
+				success: true,
+				message: 'QQQQQQQQQQQQ'
+			});
 			// Fetch HTML of the page we want to scrape
-			const { data } = await axios.get(url);
+			/* const { data } = await axios.get(url);
 			// Load HTML we fetched in the previous line
 			const $ = cheerio.load(data, {
 				decodeEntities: true
@@ -79,9 +83,9 @@ app.post('/:source/:id', async function (req, res) {
 			res.json({
 				success: true,
 				message: text
-			});
+			}); */
 
-			return false;
+			/* return false;
 
 			dataObj.title = $('#productTitle').text().trim();
 			dataObj.price = $('.a-price-whole').text().split('.')[0];
@@ -132,7 +136,7 @@ app.post('/:source/:id', async function (req, res) {
 						dataObj.images.push(newUrl);
 					}
 				}
-			});
+			}); */
 
 			/* const browser = await puppeteer.launch({
 				headless: false,
@@ -329,7 +333,7 @@ app.post('/:source/:id', async function (req, res) {
 
 			res.json(dataObj); */
 
-			var newProduct = new PRODUCTS({
+			/* var newProduct = new PRODUCTS({
 				title: dataObj.title,
 				product_id: productId,
 				description: dataObj.description[0],
@@ -355,7 +359,7 @@ app.post('/:source/:id', async function (req, res) {
 					success: true,
 					data: retData
 				});
-			}
+			} */
 		}
 	} catch (err) {
 		res.json({
