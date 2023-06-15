@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................5:45 PM'
+		message: 'App working fine................5:55 PM'
 	});
 });
 
@@ -72,16 +72,7 @@ app.post('/:source/:id', async function (req, res) {
 			// Load HTML we fetched in the previous line
 			const $ = cheerio.load(data, {
 				decodeEntities: true
-			});
-
-			var text = $('#productTitle').text().trim();
-
-			res.json({
-				success: true,
-				message: text
-			});
-
-			/* return false;
+			}); 
 
 			dataObj.title = $('#productTitle').text().trim();
 			dataObj.price = $('.a-price-whole').text().split('.')[0];
@@ -132,7 +123,7 @@ app.post('/:source/:id', async function (req, res) {
 						dataObj.images.push(newUrl);
 					}
 				}
-			}); */
+			});  
 
 			/* const browser = await puppeteer.launch({
 				headless: false,
@@ -329,7 +320,7 @@ app.post('/:source/:id', async function (req, res) {
 
 			res.json(dataObj); */
 
-			/* var newProduct = new PRODUCTS({
+			var newProduct = new PRODUCTS({
 				title: dataObj.title,
 				product_id: productId,
 				description: dataObj.description[0],
@@ -355,7 +346,7 @@ app.post('/:source/:id', async function (req, res) {
 					success: true,
 					data: retData
 				});
-			} */
+			}
 		}
 	} catch (err) {
 		res.json({
