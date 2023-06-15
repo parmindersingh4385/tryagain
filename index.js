@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................6 PM'
+		message: 'App working fine................6: 05 PM'
 	});
 });
 
@@ -122,6 +122,34 @@ app.post('/:source/:id', async function (req, res) {
 					}
 				}
 			});  
+
+			var newProduct = new PRODUCTS({
+				title: dataObj.title,
+				product_id: productId,
+				description: dataObj.small_description[0],
+				created_date: new Date().toISOString(),
+				image_url: dataObj.images,
+				brand_url: dataObj.brand_url, 
+				purchase_url: url + '?tag=girlsfab-21&language=en_IN',
+				price: dataObj.price,
+				source: source,
+				is_active:
+					dataObj.availability_status == 'In stock' ? true : false
+			});
+
+			const result = await PRODUCTS.find({ product_id: productId });
+			if (result.length > 0) {
+				res.json({
+					success: true,
+					message: 'Product already exists'
+				});
+			} else {
+				var retData = await newProduct.save();
+				res.json({
+					success: true,
+					data: retData
+				});
+			}
 
 			res.json({
 				success: true,
