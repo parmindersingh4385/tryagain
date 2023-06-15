@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................5:55 PM'
+		message: 'App working fine................6 PM'
 	});
 });
 
@@ -76,9 +76,7 @@ app.post('/:source/:id', async function (req, res) {
 
 			dataObj.title = $('#productTitle').text().trim();
 			dataObj.price = $('.a-price-whole').text().split('.')[0];
-			dataObj.brand = $('#bylineInfo')
-				.text()
-				.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+			dataObj.brand = $('#bylineInfo').text().replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 			dataObj.brand_url =
 				'https://www.amazon.in' + $('#bylineInfo').attr('href');
 
@@ -124,6 +122,11 @@ app.post('/:source/:id', async function (req, res) {
 					}
 				}
 			});  
+
+			res.json({
+				success: true,
+				message: dataObj
+			});
 
 			/* const browser = await puppeteer.launch({
 				headless: false,
@@ -320,7 +323,7 @@ app.post('/:source/:id', async function (req, res) {
 
 			res.json(dataObj); */
 
-			var newProduct = new PRODUCTS({
+			/* var newProduct = new PRODUCTS({
 				title: dataObj.title,
 				product_id: productId,
 				description: dataObj.description[0],
@@ -346,7 +349,7 @@ app.post('/:source/:id', async function (req, res) {
 					success: true,
 					data: retData
 				});
-			}
+			} */
 		}
 	} catch (err) {
 		res.json({
