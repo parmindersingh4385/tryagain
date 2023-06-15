@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send({
-		message: 'App working fine................12:35 PM'
+		message: 'App working fine................5:31 PM'
 	});
 });
 
@@ -73,6 +73,15 @@ app.post('/:source/:id', async function (req, res) {
 			const $ = cheerio.load(data, {
 				decodeEntities: true
 			});
+
+			var text = $('#productTitle').text();
+
+			res.json({
+				success: true,
+				message: text
+			});
+
+			return false;
 
 			dataObj.title = $('#productTitle').text().trim();
 			dataObj.price = $('.a-price-whole').text().split('.')[0];
