@@ -31,6 +31,12 @@ mongoose
 		console.log('CONNECT.........................');
 	});
 
+app.get('/', function(req, res){
+    res.json({
+	    message: 'Working fine'
+    });
+});
+
 app.get('/product/:id', async function(req, res){
     var productId = req.params.id;
 
