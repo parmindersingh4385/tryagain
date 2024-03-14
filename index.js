@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 
-const PORT = 1234;
+const port = process.env.PORT || 3000;
 
 //products model
 const PRODUCTS = mongoose.model('tbl_products', {
