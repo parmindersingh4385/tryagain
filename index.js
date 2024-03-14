@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 
 const port = process.env.PORT || 3000;
 
+const cors = require('cors');
+app.use(cors());
+
 //products model
 const PRODUCTS = mongoose.model('tbl_products', {
 	title: String,
