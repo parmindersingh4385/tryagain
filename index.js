@@ -115,6 +115,6 @@ app.get('/products', async function(req, res){
 })
 
 
-app.listen(PORT, function(req, res){
-    console.log('App running on port '+ PORT);
+app.listen(port, '0.0.0.0', function () {
+	console.log('App running on port ' + port);
 });
