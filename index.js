@@ -40,11 +40,11 @@ mongoose
 
 app.get('/', function(req, res){
 	res.send({
-		message: 'Working fine......2222'
+		message: 'Working fine......33333'
 	});
 });
 
-app.get('/search', async function(req, res){
+app.POST('/search', async function(req, res){
     var searchText = req.query.text;
 
 	searchText = searchText.split(' ').join('+');
