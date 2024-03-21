@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 3000;
 
-const cors = require('cors');
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json())
 
 //products model
 const PRODUCTS = mongoose.model('tbl_products', {
@@ -35,12 +39,52 @@ mongoose
 	});
 
 app.get('/', function(req, res){
-    res.json({
-	    message: 'Working fine'
-    });
+	res.send({
+		message: 'Working fine......1111'
+	});
 });
 
-app.get('/product/:id', async function(req, res){
+app.get('/search', async function(req, res){
+    var searchText = req.query.text;
+
+	searchText = searchText.split(' ').join('+');
+
+	let response = await fetch(`https://affiliate-api.flipkart.net/affiliate/1.0/search.json?query=${searchText}&resultCount=1`, {
+		method: 'GET',
+		headers: {
+			'Fk-Affiliate-Id': 'singh1par',
+			'Fk-Affiliate-Token': '1d5f2616c8c644f2806fe8da0c40946e'
+		},
+	});
+
+	let responseData1 = await response.json();
+
+	var responseData2 = (responseData1.products && responseData1.products.length > 0 ) ? responseData1.products[0].productBaseInfoV1 : {};
+
+	res.send({
+		data: responseData2
+	});
+
+});
+
+app.get('/products', async function(req, res){
+	const result = await PRODUCTS.find({ });
+	if (result.length > 0) {
+		console.log(result);
+		res.send({
+			total_count: result.length,
+			products: result
+		});
+	}else{
+		res.send({
+			total_count: 0,
+			products: []
+			
+		});
+	}
+})
+
+app.post('/product/:id', async function(req, res){
     var productId = req.params.id;
 
     try {
@@ -100,29 +144,11 @@ app.get('/product/:id', async function(req, res){
         }
     } catch (err){
         res.send({
-			success: false,
-			message: err.message
-		});
+		success: false,
+		message: err.message
+	});
     }
 });
-
-app.get('/products', async function(req, res){
-	const result = await PRODUCTS.find({ });
-	if (result.length > 0) {
-		console.log(result);
-		res.send({
-			total_count: result.length,
-			products: result
-		});
-	}else{
-		res.send({
-			total_count: 0,
-			products: []
-			
-		});
-	}
-})
-
 
 app.listen(port, '0.0.0.0', function () {
 	console.log('App running on port ' + port);
