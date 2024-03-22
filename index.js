@@ -44,7 +44,7 @@ app.get('/', function(req, res){
 	});
 });
 
-app.GET('/search', async function(req, res){
+app.get('/search', async function(req, res){
     var searchText = req.query.text;
 
 	searchText = searchText.split(' ').join('+');
