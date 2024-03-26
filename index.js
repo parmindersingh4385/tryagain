@@ -40,7 +40,7 @@ mongoose
 
 app.get('/', function(req, res){
 	res.send({
-		message: 'Working fine......55555'
+		message: 'Working fine......666666'
 	});
 });
 
@@ -147,6 +147,26 @@ app.post('/product/:id', async function(req, res){
 		success: false,
 		message: err.message
 	});
+    }
+});
+
+app.delete('/product/:id', async function(req, res){
+     	if(req.params){
+	        var productId = req.params.id; 
+	        try {
+	            const product = await PRODUCTS.findByIdAndDelete(productId);
+	
+	            if (!product){
+	                res.status(404).send({ success: true, message: "No product found" });
+	            }else{
+	                res.status(200).send({ success: true, message: "Product deleted successfully" });
+	            }
+	        } catch (err) {
+	            res.send({
+			success: false,
+			message: err.message
+		});
+        }
     }
 });
 
