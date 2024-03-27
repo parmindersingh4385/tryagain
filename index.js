@@ -40,7 +40,7 @@ mongoose
 
 app.get('/', function(req, res){
 	res.send({
-		message: 'Working fine......666666'
+		message: 'Working fine......7777777'
 	});
 });
 
@@ -68,7 +68,7 @@ app.get('/search', async function(req, res){
 });
 
 app.get('/products', async function(req, res){
-	const result = await PRODUCTS.find({ });
+	const result = await PRODUCTS.find({ }).sort({ create_date: 'desc' });
 	if (result.length > 0) {
 		console.log(result);
 		res.send({
