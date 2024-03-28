@@ -40,7 +40,7 @@ mongoose
 
 app.get('/', function(req, res){
 	res.send({
-		message: 'Working fine......11111111'
+		message: 'Working fine......2222222'
 	});
 });
 
@@ -49,7 +49,7 @@ app.get('/search', async function(req, res){
 
 	searchText = searchText.split(' ').join('+');
 
-	let response = await fetch(`https://affiliate-api.flipkart.net/affiliate/1.0/search.json?query=${searchText}&resultCount=10`, {
+	let response = await fetch(`https://affiliate-api.flipkart.net/affiliate/1.0/search.json?query=${searchText}&resultCount=3`, {
 		method: 'GET',
 		headers: {
 			'Fk-Affiliate-Id': 'singh1par',
