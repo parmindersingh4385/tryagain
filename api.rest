@@ -1,1 +1,8 @@
-POST https://testapp-kj54.onrender.com/girlsfab/B0BY8JZ22K
+GET https://affiliate-api.flipkart.net/affiliate/1.0/product.json?id=TVSGHEQV4NQPS6EH
+Fk-Affiliate-Id: singh1par
+Fk-Affiliate-Token: 1d5f2616c8c644f2806fe8da0c40946e
+
+##############################
+GET https://affiliate-api.flipkart.net/affiliate/1.0/search.json?query=iqoo+neo9+phone&resultCount=1
+Fk-Affiliate-Id: singh1par
+Fk-Affiliate-Token: 1d5f2616c8c644f2806fe8da0c40946e
