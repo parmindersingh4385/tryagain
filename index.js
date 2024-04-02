@@ -40,7 +40,7 @@ mongoose
 
 app.get('/', function(req, res){
 	res.send({
-		message: 'Working fine......33333'
+		message: 'Working fine......111111'
 	});
 });
 
@@ -82,7 +82,66 @@ app.get('/products', async function(req, res){
 			
 		});
 	}
-})
+});
+
+async function addRelatedProducts(productIds){
+    if(productIds.length > 0){
+	for(let i=0; i<productIds.length-1; i++){
+	var productId = productIds[i];
+	try {
+	        const result = await PRODUCTS.find({ product_id: productId });
+			if (result.length > 0) {
+				res.send({
+					success: true,
+					message: 'Product already exists'
+				});
+			} else {
+	            let dataObj = {};
+	            let response = await fetch('https://affiliate-api.flipkart.net/affiliate/1.0/product.json?id=' + productId, {
+	                method: 'GET',
+	                headers: {
+	                    'Fk-Affiliate-Id': 'singh1par',
+	                    'Fk-Affiliate-Token': '1d5f2616c8c644f2806fe8da0c40946e'
+	                },
+	            });
+	
+	            let data = await response.json();
+	
+	            data = data.productBaseInfoV1;
+	
+	            dataObj.title = data.title;
+	            dataObj.description = data.productDescription;
+	            dataObj.image_url = data.imageUrls;
+	            dataObj.purchase_url = data.productUrl;
+	            dataObj.price = data.flipkartSpecialPrice.amount;
+	            dataObj.source = 'flipkart';
+	            dataObj.is_active = data.inStock;
+	
+	            var newProduct = new PRODUCTS({
+			title: dataObj.title,
+			product_id: productId,
+			description: dataObj.description,
+			created_date: new Date().toISOString(),
+			image_url: dataObj.image_url,
+			purchase_url: dataObj.purchase_url,
+			price: dataObj.price,
+			source: dataObj.source,
+			is_active: dataObj.is_active
+		});
+	
+	            const result = await PRODUCTS.find({ product_id: productId });
+			if (result.length > 0) {
+				
+			} else {
+			    var retData = await newProduct.save();
+			}
+	        }
+	    } catch (err){
+	        
+	    }
+	}
+    }
+}
 
 app.post('/product/:id', async function(req, res){
     var productId = req.params.id;
@@ -115,6 +174,8 @@ app.post('/product/:id', async function(req, res){
             dataObj.price = data.flipkartSpecialPrice.amount;
             dataObj.source = 'flipkart';
             dataObj.is_active = data.inStock;
+
+	    addRelatedProducts(data.productFamily);
 
             var newProduct = new PRODUCTS({
 				title: dataObj.title,
